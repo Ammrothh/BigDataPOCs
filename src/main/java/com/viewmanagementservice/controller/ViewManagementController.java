@@ -3,6 +3,7 @@ package com.viewmanagementservice.controller;
 import com.viewmanagementservice.dto.Event;
 import com.viewmanagementservice.service.ViewManagementService;
 import org.springframework.http.ResponseEntity;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,7 @@ public class ViewManagementController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> processEvent(@RequestBody Event event) {
+    public ResponseEntity<Void> processEvent(@Valid @RequestBody Event event) {
         viewManagementService.processEvent(event);
         return ResponseEntity.ok().build();
     }

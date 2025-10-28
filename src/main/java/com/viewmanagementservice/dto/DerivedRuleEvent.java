@@ -1,8 +1,10 @@
 package com.viewmanagementservice.dto;
 
 import com.viewmanagementservice.model.EventType;
+import jakarta.validation.constraints.NotBlank;
 
 public class DerivedRuleEvent extends Event {
+    @NotBlank(message = "Rule name cannot be blank")
     private String ruleName;
 
     public DerivedRuleEvent() {

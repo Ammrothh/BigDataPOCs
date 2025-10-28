@@ -1,8 +1,10 @@
 package com.viewmanagementservice.dto;
 
 import com.viewmanagementservice.model.EventType;
+import jakarta.validation.constraints.NotBlank;
 
 public class BackupTableViewEvent extends Event {
+    @NotBlank(message = "Table name cannot be blank")
     private String tableName;
 
     public BackupTableViewEvent() {

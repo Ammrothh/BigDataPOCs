@@ -3,12 +3,14 @@ package com.viewmanagementservice.service;
 import com.viewmanagementservice.dto.ResourceMetadataEvent;
 import com.viewmanagementservice.handler.EventHandler;
 import com.viewmanagementservice.handler.ResourceMetadataEventHandler;
+import com.viewmanagementservice.repository.LookupDataRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -18,19 +20,25 @@ public class ViewManagementServiceTest {
     @Mock
     private ResourceMetadataEventHandler resourceMetadataEventHandler;
 
+    @Mock
+    private LookupDataRepository lookupDataRepository;
+
     private ViewManagementService viewManagementService;
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
         when(resourceMetadataEventHandler.getEventType()).thenReturn(com.viewmanagementservice.model.EventType.RESOURCE_METADATA);
-        viewManagementService = new ViewManagementServiceImpl(Collections.singletonList(resourceMetadataEventHandler));
+        List<EventHandler> handlers = Collections.singletonList(resourceMetadataEventHandler);
+        viewManagementService = new ViewManagementServiceImpl(handlers, lookupDataRepository);
     }
 
     @Test
     public void testProcessEvent() {
         ResourceMetadataEvent event = new ResourceMetadataEvent();
         event.setResourceName("test-resource");
+
+        when(lookupDataRepository.existsById("test-resource")).thenReturn(true);
 
         viewManagementService.processEvent(event);
 
