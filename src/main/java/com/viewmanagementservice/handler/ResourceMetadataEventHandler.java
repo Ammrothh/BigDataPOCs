@@ -10,7 +10,7 @@ public class ResourceMetadataEventHandler implements EventHandler<ResourceMetada
     @Override
     public void handle(ResourceMetadataEvent event) {
         // Business logic for handling Resource Metadata Event
-        System.out.println("Handling Resource Metadata Event: " + event.getResourceName());
+        System.out.println("Handling Resource Metadata Event: " + event.resourceName());
     }
 
     @Override

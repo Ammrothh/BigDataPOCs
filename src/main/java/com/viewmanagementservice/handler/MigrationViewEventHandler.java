@@ -10,7 +10,7 @@ public class MigrationViewEventHandler implements EventHandler<MigrationViewEven
     @Override
     public void handle(MigrationViewEvent event) {
         // Business logic for handling Migration View Event
-        System.out.println("Handling Migration View Event: " + event.getViewName());
+        System.out.println("Handling Migration View Event: " + event.viewName());
     }
 
     @Override

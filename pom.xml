@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.11</version>
+		<version>3.3.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.viewmanagementservice</groupId>
@@ -48,13 +48,20 @@
 		<dependency>
 			<groupId>org.duckdb</groupId>
 			<artifactId>duckdb_jdbc</artifactId>
-			<version>1.4.1.0</version>
+			<version>0.10.2</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp</artifactId>
 			<version>4.12.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.32</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>

@@ -2,6 +2,7 @@ package com.viewmanagementservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.viewmanagementservice.dto.ResourceMetadataEvent;
+import com.viewmanagementservice.model.EventType;
 import com.viewmanagementservice.service.ViewManagementService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,7 @@ public class ViewManagementControllerValidationTest {
 
     @Test
     public void testProcessEventWithInvalidEvent() throws Exception {
-        ResourceMetadataEvent event = new ResourceMetadataEvent();
-        event.setResourceName(""); // Invalid because it's blank
+        ResourceMetadataEvent event = new ResourceMetadataEvent("", EventType.RESOURCE_METADATA); // Invalid because it's blank
 
         mockMvc.perform(post("/events")
                 .contentType(MediaType.APPLICATION_JSON)

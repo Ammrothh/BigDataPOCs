@@ -2,6 +2,7 @@ package com.viewmanagementservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.viewmanagementservice.dto.ResourceMetadataEvent;
+import com.viewmanagementservice.model.EventType;
 import com.viewmanagementservice.service.ViewManagementService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,7 @@ public class ViewManagementControllerTest {
 
     @Test
     public void testProcessEvent() throws Exception {
-        ResourceMetadataEvent event = new ResourceMetadataEvent();
-        event.setResourceName("test-resource");
+        ResourceMetadataEvent event = new ResourceMetadataEvent("test-resource", EventType.RESOURCE_METADATA);
 
         mockMvc.perform(post("/events")
                 .contentType(MediaType.APPLICATION_JSON)

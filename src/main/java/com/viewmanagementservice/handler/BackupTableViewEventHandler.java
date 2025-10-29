@@ -10,7 +10,7 @@ public class BackupTableViewEventHandler implements EventHandler<BackupTableView
     @Override
     public void handle(BackupTableViewEvent event) {
         // Business logic for handling Backup Table View Event
-        System.out.println("Handling Backup Table View Event: " + event.getTableName());
+        System.out.println("Handling Backup Table View Event: " + event.tableName());
     }
 
     @Override

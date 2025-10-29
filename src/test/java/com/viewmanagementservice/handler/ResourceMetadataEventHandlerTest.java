@@ -1,6 +1,7 @@
 package com.viewmanagementservice.handler;
 
 import com.viewmanagementservice.dto.ResourceMetadataEvent;
+import com.viewmanagementservice.model.EventType;
 import org.junit.jupiter.api.Test;
 
 public class ResourceMetadataEventHandlerTest {
@@ -8,8 +9,7 @@ public class ResourceMetadataEventHandlerTest {
     @Test
     public void testHandle() {
         ResourceMetadataEventHandler handler = new ResourceMetadataEventHandler();
-        ResourceMetadataEvent event = new ResourceMetadataEvent();
-        event.setResourceName("test-resource");
+        ResourceMetadataEvent event = new ResourceMetadataEvent("test-resource", EventType.RESOURCE_METADATA);
 
         handler.handle(event);
 

@@ -10,7 +10,7 @@ public class DerivedRuleEventHandler implements EventHandler<DerivedRuleEvent> {
     @Override
     public void handle(DerivedRuleEvent event) {
         // Business logic for handling Derived Rule Event
-        System.out.println("Handling Derived Rule Event: " + event.getRuleName());
+        System.out.println("Handling Derived Rule Event: " + event.ruleName());
     }
 
     @Override

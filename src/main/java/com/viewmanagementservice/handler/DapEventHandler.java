@@ -10,7 +10,7 @@ public class DapEventHandler implements EventHandler<DapEvent> {
     @Override
     public void handle(DapEvent event) {
         // Business logic for handling DAP Event
-        System.out.println("Handling DAP Event: " + event.getDapName());
+        System.out.println("Handling DAP Event: " + event.dapName());
     }
 
     @Override
