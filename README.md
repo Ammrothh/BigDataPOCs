@@ -10,7 +10,8 @@ This application is built with Java 21, uses Maven for dependency management, an
 
 The service is designed around a robust event-driven architecture that leverages the **Strategy design pattern** to handle different event types in a decoupled and scalable manner.
 
--   **REST API**: The application exposes a single `POST /events` endpoint to receive all incoming events.
+-   **REST API**: The application exposes a single `POST /events` endpoint to receive all incoming events. The endpoint accepts a list of events for bulk processing.
+-   **Asynchronous Processing**: The service uses a queue-backed, asynchronous execution model to process events in parallel. This allows the API to remain highly responsive, even under heavy load. When the number of concurrent events exceeds the configured thread pool size, events are queued for later processing.
 -   **Polymorphic Deserialization**: Jackson's polymorphic deserialization (`@JsonTypeInfo` and `@JsonSubTypes`) is used to automatically deserialize the incoming JSON payload into the correct `Event` subclass based on the `eventType` property.
 -   **Event Handlers (Strategy Pattern)**: For each event type, there is a dedicated `EventHandler` implementation. The `ViewManagementService` acts as a context that delegates the processing of an event to the appropriate handler (strategy) based on its type. This makes it easy to add new event types without modifying the core service logic.
 
@@ -26,41 +27,25 @@ The service is designed to handle the following event types:
 
 ## 4. API Usage
 
-To process an event, send a `POST` request to the `/events` endpoint. The request body must be a JSON object containing the `eventType` and the specific properties for that event.
+To process an event, send a `POST` request to the `/events` endpoint. The request body must be a JSON array of event objects.
 
 **Endpoint**: `POST /events`
 
 **Headers**: `Content-Type: application/json`
 
-### Example Payloads
-
-Here are some example JSON payloads for different event types.
-
-#### Resource Metadata Event
+### Example Payload
 
 ```json
-{
-  "eventType": "RESOURCE_METADATA",
-  "resourceName": "com.example.resource.MyResource"
-}
-```
-
-#### DAP Event
-
-```json
-{
-  "eventType": "DAP",
-  "dapName": "com.example.dap.MyDap"
-}
-```
-
-#### Derived Rule Event
-
-```json
-{
-  "eventType": "DERIVED_RULE",
-  "ruleName": "com.example.rule.MyRule"
-}
+[
+  {
+    "eventType": "RESOURCE_METADATA",
+    "resourceName": "com.example.resource.MyResource"
+  },
+  {
+    "eventType": "DAP",
+    "dapName": "com.example.dap.MyDap"
+  }
+]
 ```
 
 ## 5. Project Structure
@@ -72,6 +57,7 @@ The project follows a standard layered architecture, with key components organiz
 -   `com.viewmanagementservice.handler`: Contains the `EventHandler` implementations for each event type (the Strategy pattern).
 -   `com.viewmanagementservice.dto`: Contains the Data Transfer Objects (DTOs) for the different event types.
 -   `com.viewmanagementservice.model`: Contains domain models and enums, such as `EventType`.
+-   `com.viewmanagementservice.trino`: Contains the Trino connection manager and query executor.
 
 ## 6. How to Build and Run
 
@@ -103,3 +89,7 @@ To run the unit tests for the application, execute the following command:
 ```bash
 mvn clean test
 ```
+
+## 8. Kubernetes Deployment
+
+The application is designed to be deployed in a Kubernetes cluster. The use of a `LoadBalancer` or `Ingress` will distribute incoming traffic evenly across all running pods. The application's stateless architecture allows for seamless horizontal scaling.

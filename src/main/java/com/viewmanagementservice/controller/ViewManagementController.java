@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/events")
 @RequiredArgsConstructor
@@ -18,8 +20,8 @@ public class ViewManagementController {
     private final ViewManagementService viewManagementService;
 
     @PostMapping
-    public ResponseEntity<Void> processEvent(@Valid @RequestBody Event event) {
-        viewManagementService.processEvent(event);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> processEvents(@Valid @RequestBody List<Event> events) {
+        viewManagementService.processEvents(events);
+        return ResponseEntity.accepted().build();
     }
 }
