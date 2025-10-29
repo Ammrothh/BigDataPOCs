@@ -4,6 +4,8 @@ import com.viewmanagementservice.dto.ResourceMetadataEvent;
 import com.viewmanagementservice.handler.EventHandler;
 import com.viewmanagementservice.model.EventType;
 import com.viewmanagementservice.repository.LookupDataRepository;
+import com.viewmanagementservice.trino.TrinoConnectionManager;
+import com.viewmanagementservice.trino.TrinoQueryExecutor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -23,13 +25,19 @@ public class ViewManagementServiceValidationTest {
     @Mock
     private EventHandler eventHandler;
 
+    @Mock
+    private TrinoConnectionManager trinoConnectionManager;
+
+    @Mock
+    private TrinoQueryExecutor trinoQueryExecutor;
+
     private ViewManagementServiceImpl viewManagementService;
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
         List<EventHandler> handlers = Collections.singletonList(eventHandler);
-        viewManagementService = new ViewManagementServiceImpl(handlers, lookupDataRepository);
+        viewManagementService = new ViewManagementServiceImpl(handlers, lookupDataRepository, trinoConnectionManager, trinoQueryExecutor);
         viewManagementService.init();
     }
 

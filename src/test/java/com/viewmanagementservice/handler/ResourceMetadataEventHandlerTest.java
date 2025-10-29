@@ -2,29 +2,24 @@ package com.viewmanagementservice.handler;
 
 import com.viewmanagementservice.dto.ResourceMetadataEvent;
 import com.viewmanagementservice.model.EventType;
-import com.viewmanagementservice.trino.TrinoConnectionManager;
-import com.viewmanagementservice.trino.TrinoQueryExecutor;
+import com.viewmanagementservice.trino.TrinoQueries;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+
+import java.util.Collections;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ResourceMetadataEventHandlerTest {
 
-    @Mock
-    private TrinoConnectionManager trinoConnectionManager;
-
-    @Mock
-    private TrinoQueryExecutor trinoQueryExecutor;
-
     @Test
     public void testHandle() {
-        MockitoAnnotations.openMocks(this);
-        ResourceMetadataEventHandler handler = new ResourceMetadataEventHandler(trinoConnectionManager, trinoQueryExecutor);
+        ResourceMetadataEventHandler handler = new ResourceMetadataEventHandler();
         ResourceMetadataEvent event = new ResourceMetadataEvent("test-resource", EventType.RESOURCE_METADATA);
 
-        handler.handle(event);
+        TrinoQueries trinoQueries = handler.handle(event);
 
-        // In a real application, you would verify the business logic here
-        // For now, we are just printing to the console
+        assertEquals("default", trinoQueries.namespace());
+        assertEquals(Collections.singletonList("CREATE SCHEMA IF NOT EXISTS my_schema"), trinoQueries.schemaQueries());
+        assertEquals(Collections.singletonList("CREATE OR REPLACE VIEW my_schema.my_view AS SELECT 1"), trinoQueries.viewQueries());
     }
 }
