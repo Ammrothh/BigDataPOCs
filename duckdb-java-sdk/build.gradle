@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.example.duckdb'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenLocal()
+    // A mirror that doesn't 429
+    maven { url "https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/" }
+    maven { url "https://repo.osgeo.org/repository/release/" }
+    mavenCentral()
+}
+
+dependencies {
+    def arrowVersion = "17.0.0"
+    def adbcVersion = "0.15.0"
+
+    implementation "org.apache.arrow:arrow-vector:${arrowVersion}"
+    implementation "org.apache.arrow:arrow-memory-netty:${arrowVersion}"
+    implementation "org.apache.arrow:arrow-flight-core:${arrowVersion}"
+    implementation "org.apache.arrow.adbc:adbc-core:${adbcVersion}"
+    implementation "org.apache.arrow.adbc:adbc-driver-manager:${adbcVersion}"
+    implementation "org.duckdb:duckdb_jdbc:1.1.2"
+    implementation "org.slf4j:slf4j-api:2.0.16"
+    implementation "org.slf4j:slf4j-simple:2.0.16"
+    testImplementation "junit:junit:4.13.2"
+}
+
+test {
+    useJUnit()
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+    }
+}
