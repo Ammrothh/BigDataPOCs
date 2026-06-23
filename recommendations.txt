@@ -1,0 +1,18 @@
+Hi there,
+
+Yes, building a highly optimized Java SDK for DuckDB that outperforms Python Pandas is absolutely possible!
+
+**Technical Feasibility & Performance:**
+Java is heavily optimized for long-running processes through JIT compilation, which gives it an edge over Python in CPU-bound tight data loops (when Python isn't purely delegating to C/C++). By using **Apache Arrow**, we can extract tabular data from DuckDB in columnar format without the massive overhead of JDBC Row serialization/deserialization. Since Java supports strong multi-threading (no GIL like in Python), we can easily execute Higher Order Functions concurrently across chunks of Arrow data.
+
+**What I Have Done:**
+1. **Bootstrapped the Project**: Created a new Maven module `duckdb-java-sdk` to contain the project, with dependencies like `arrow-vector`, `arrow-flight-core`, `adbc-driver-manager`, and `duckdb_jdbc`.
+2. **Designed the DataFrame API**: Designed an interface (`DataFrame.java`) for lazy evaluation of higher-order functions (e.g. `map()`, `filter()`, `agg()`). These functions build SQL trees that get pushed down to DuckDB for execution instead of running locally.
+3. **Built Client & Flight Skeletons**: Provided a `DuckDBClient` and `FlightServerWrapper` implementation to allow raw SQL querying and exposing Arrow records natively via gRPC.
+
+**Next Steps & Questions for You:**
+1. **ADBC Native Driver:** DuckDB currently does not publish an official `adbc-driver-duckdb` Maven jar for Java. Do you want to build the native JNI driver locally from the duckdb source, or rely on `duckdb_jdbc`'s built-in Arrow export capabilities (which are extremely fast and effectively zero-copy)?
+2. **Higher Order Functions (HOFs):** How do you envision the HOF map syntax in Java? Would you prefer a fluent API that evaluates Lambdas, or passing optimized SQL fragments directly (e.g., `df.map("age_plus_one", "age + 1")`)?
+3. **State Management:** DuckDB runs in-process. Should the `DuckDBClient` manage the lifecycle of a single connection pool, or spawn per thread?
+
+Let me know your thoughts so we can refine the implementation further!
