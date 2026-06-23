@@ -1,0 +1,15 @@
+Yes, it is entirely possible to build a highly optimized Java SDK to access in-memory DuckDB that competes with or exceeds the performance of Python Pandas, while supporting higher-order functions (HOFs) and Apache Arrow Flight for gRPC sharing.
+
+### Why it will be more performant than Python Pandas:
+1. **JVM Performance:** Java (and the JVM) is heavily optimized for long-running processes through JIT (Just-In-Time) compilation. For tight data loops and memory management, Java usually beats Python by orders of magnitude unless Python is completely offloading to C/C++ libraries.
+2. **DuckDB Engine:** DuckDB is a columnar, in-process analytical engine written in C++. It executes queries using vectorized execution, making it incredibly fast.
+3. **Apache Arrow / ADBC:** The bottleneck with traditional JDBC/ODBC connections is serialization and deserialization of rows. By using the **Arrow Database Connectivity (ADBC)** API or direct Arrow integrations, data is handed off in columnar Arrow format directly from DuckDB's engine to Java’s off-heap memory. There's almost zero-copy overhead.
+4. **No GIL:** Python's Global Interpreter Lock (GIL) limits true parallelism. Java's multi-threading allows us to evaluate higher-order functions across chunks of Arrow data concurrently using parallel streams or ExecutorServices.
+
+### Architecture Overview
+- **Data Engine:** DuckDB (in-memory).
+- **Driver:** DuckDB JDBC or ADBC (for columnar data extraction). Note: DuckDB doesn't have an official `adbc-driver-duckdb` precompiled for Java on Maven Central yet, so we can use standard DuckDB JDBC which recently has excellent native Arrow support (`DuckDBResultSet` -> Arrow Vectors) or use the ADBC JNI generic drivers if compiled locally. For this setup, we'll build around the capability to stream Arrow blocks.
+- **DataFrame API:** A custom wrapper that lazily evaluates HOFs (like `filter`, `map`, `agg`) into optimized SQL strings pushed down to DuckDB, and only executes when `.collect()` or `.show()` is called.
+- **Data Sharing:** Apache Arrow Flight server integrated directly to stream Arrow batches out via gRPC without any data translation.
+
+I have set up the basic repository structure and a `pom.xml` for `duckdb-java-sdk` with dependencies for Arrow, ADBC, Flight, and DuckDB.
