@@ -4,8 +4,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DataFrameImpl implements DataFrame {
 
@@ -39,14 +41,12 @@ public class DataFrameImpl implements DataFrame {
     @Override
     public DataFrame groupBy(String... columns) {
         String cols = String.join(", ", columns);
-        // This is a simplified group by builder, requires an agg call next
         String newQuery = String.format("SELECT %s FROM (%s) as subquery GROUP BY %s", cols, this.query, cols);
         return new DataFrameImpl(this.connection, newQuery);
     }
 
     @Override
     public DataFrame agg(String expression) {
-        // Appends to the select list, assumes group by was applied previously or aggregates over all
         String newQuery = this.query.replace("FROM", ", " + expression + " FROM");
         return new DataFrameImpl(this.connection, newQuery);
     }
@@ -64,7 +64,7 @@ public class DataFrameImpl implements DataFrame {
             System.out.println();
 
             int rows = 0;
-            while (rs.next() && rows < 20) { // show top 20
+            while (rs.next() && rows < 20) {
                 for (int i = 1; i <= columnCount; i++) {
                     System.out.print(rs.getString(i) + "\t");
                 }
@@ -80,13 +80,32 @@ public class DataFrameImpl implements DataFrame {
     }
 
     @Override
+    public List<Map<String, Object>> collect() {
+        List<Map<String, Object>> results = new ArrayList<>();
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(this.query)) {
+
+            int columnCount = rs.getMetaData().getColumnCount();
+            while (rs.next()) {
+                Map<String, Object> row = new HashMap<>();
+                for (int i = 1; i <= columnCount; i++) {
+                    row.put(rs.getMetaData().getColumnName(i), rs.getObject(i));
+                }
+                results.add(row);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Execution failed", e);
+        }
+        return results;
+    }
+
+    @Override
     public String explain() {
         return this.query;
     }
 
     @Override
     public String toFlightDescriptor() {
-        // Skeleton for Flight descriptor
         return "FlightDescriptor: " + this.query;
     }
 }

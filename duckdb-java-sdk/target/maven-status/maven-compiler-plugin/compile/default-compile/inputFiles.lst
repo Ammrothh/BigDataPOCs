@@ -1,0 +1,5 @@
+/app/duckdb-java-sdk/src/main/java/com/example/duckdb/DataFrame.java
+/app/duckdb-java-sdk/src/main/java/com/example/duckdb/DataFrameImpl.java
+/app/duckdb-java-sdk/src/main/java/com/example/duckdb/DuckDBClient.java
+/app/duckdb-java-sdk/src/main/java/com/example/duckdb/DuckDBClientImpl.java
+/app/duckdb-java-sdk/src/main/java/com/example/duckdb/FlightServerWrapper.java

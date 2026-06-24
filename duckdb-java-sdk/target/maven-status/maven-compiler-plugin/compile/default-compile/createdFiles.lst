@@ -1,0 +1,5 @@
+com/example/duckdb/DataFrameImpl.class
+com/example/duckdb/DataFrame.class
+com/example/duckdb/FlightServerWrapper.class
+com/example/duckdb/DuckDBClientImpl.class
+com/example/duckdb/DuckDBClient.class
